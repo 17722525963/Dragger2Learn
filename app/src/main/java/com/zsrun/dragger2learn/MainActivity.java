@@ -9,8 +9,9 @@ import android.util.Log;
 import com.zsrun.dragger2learn.adapter.GanksAdapter;
 import com.zsrun.dragger2learn.api.Api;
 import com.zsrun.dragger2learn.component.DaggerGanksComponent;
+import com.zsrun.dragger2learn.entity.Android;
 import com.zsrun.dragger2learn.entity.Ganks;
-import com.zsrun.dragger2learn.entity.福利;
+import com.zsrun.dragger2learn.module.AppModule;
 
 import javax.inject.Inject;
 
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recycler)
     RecyclerView recyclerView;
 
-    private GanksAdapter<福利> ganksAdapter;
+    @Inject
+    GanksAdapter<Android> ganksAdapter;
 
     @Inject
     Api api;
@@ -39,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        DaggerGanksComponent.create().inject(this);
+        DaggerGanksComponent.builder().appModule(new AppModule(this)).build().inject(this);
 
         initView();
+
+        Log.i(TAG, "onCreate: " + api.toString());
 
         test();
     }
@@ -50,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
         new Thread() {
             @Override
             public void run() {
-                api.getGanks("2018", "07", "18")
+                api.getGanks("2018", "07", "19")
                         .enqueue(new Callback<Ganks>() {
                             @Override
                             public void onResponse(Call<Ganks> call, Response<Ganks> response) {
-                                ganksAdapter.setNewData(response.body().getResults().get福利());
+                                ganksAdapter.setNewData(response.body().getResults().getAndroid());
                             }
 
                             @Override
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ganksAdapter = new GanksAdapter<福利>(R.layout.item_layout, null);
+//        ganksAdapter = new GanksAdapter<>(R.layout.item_layout, null);
         ganksAdapter.bindToRecyclerView(recyclerView);
     }
 }

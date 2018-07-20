@@ -1,6 +1,8 @@
 package com.zsrun.dragger2learn.component;
 
+import com.zsrun.dragger2learn.BaseApp;
 import com.zsrun.dragger2learn.module.AppModule;
+import com.zsrun.dragger2learn.scope.MyScope;
 
 import dagger.Component;
 
@@ -11,7 +13,9 @@ import dagger.Component;
  * @version 1.0
  */
 
-@Component()
+@MyScope
+@Component(modules = AppModule.class)
 public interface AppComponent {
+
 
 }
