@@ -11,7 +11,8 @@ import com.zsrun.dragger2learn.api.Api;
 import com.zsrun.dragger2learn.component.DaggerGanksComponent;
 import com.zsrun.dragger2learn.entity.Android;
 import com.zsrun.dragger2learn.entity.Ganks;
-import com.zsrun.dragger2learn.module.AppModule;
+import com.zsrun.dragger2learn.module.GankModule;
+import com.zsrun.dragger2learn.test.Test;
 
 import javax.inject.Inject;
 
@@ -35,17 +36,32 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     Api api;
 
+    @Inject
+    Api api2;
+
+    @Inject
+    Test test2;
+
+    @Inject
+    Test test;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        DaggerGanksComponent.builder().appModule(new AppModule(this)).build().inject(this);
+        DaggerGanksComponent.builder()
+                .gankModule(new GankModule())
+                .appComponent(((BaseApp) getApplication()).getAppComponent())
+                .build()
+                .inject(this);
 
         initView();
 
-        Log.i(TAG, "onCreate: " + api.toString());
+        Log.i(TAG, "onCreate1: " + api.toString());
+        Log.i(TAG, "onCreate2: " + api2.toString());
+
 
         test();
     }
